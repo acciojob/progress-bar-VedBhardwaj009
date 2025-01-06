@@ -1,16 +1,141 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            max-width: 600px;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #ccc;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: #4caf50;
+            transition: width 0.3s ease;
+        }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 3px solid #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .circle.active {
+            border-color: #4caf50;
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            border: none;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buttons button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+    <div class="progress-container">
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+        <div id="circle-1" class="circle active">1</div>
+        <div id="circle-2" class="circle">2</div>
+        <div id="circle-3" class="circle">3</div>
+        <div id="circle-4" class="circle">4</div>
+        <div id="circle-5" class="circle">5</div>
+    </div>
+    <div class="buttons">
+        <button id="prev" disabled>Previous</button>
+        <button id="next">Next</button>
+    </div>
 
+    <script>
+        const circles = document.querySelectorAll('.circle');
+        const progressBar = document.querySelector('.progress-bar');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+
+        let currentActive = 1;
+
+        function update() {
+            circles.forEach((circle, idx) => {
+                if (idx < currentActive) {
+                    circle.classList.add('active');
+                } else {
+                    circle.classList.remove('active');
+                }
+            });
+
+            const activeCircles = document.querySelectorAll('.circle.active');
+            const progressPercentage = ((activeCircles.length - 1) / (circles.length - 1)) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+
+            prevButton.disabled = currentActive === 1;
+            nextButton.disabled = currentActive === circles.length;
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (currentActive < circles.length) {
+                currentActive++;
+                update();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentActive > 1) {
+                currentActive--;
+                update();
+            }
+        });
+    </script>
 </body>
-
 </html>
